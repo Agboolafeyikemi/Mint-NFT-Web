@@ -1,20 +1,79 @@
-import './styles/App.css';
-import twitterLogo from './assets/twitter-logo.svg';
-import React from "react";
+import "./styles/App.css";
+import twitterLogo from "./assets/twitter-logo.svg";
+import React, { useEffect, useState } from "react";
 
 // Constants
-const TWITTER_HANDLE = '_buildspace';
+const TWITTER_HANDLE = "_buildspace";
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-const OPENSEA_LINK = '';
+const OPENSEA_LINK = "";
 const TOTAL_MINT_COUNT = 50;
 
 const App = () => {
+  const [currentAccount, setCurrentAccount] = useState("");
+
+  const askContractToMint = async () => {
+    const CONTRACT_ADDRESS = "0x86b713E4FAdB7d86F134B9C42aF19c19D22b64Ba";
+  };
+
+  const checkIfWallectIsConnected = async () => {
+    const { ethereum } = window;
+    if (!ethereum) {
+      console.log("Make sure you have Metamask!");
+      return;
+    } else {
+      console.log("We have the ethereum Object", ethereum);
+    }
+    //check if we are authorized to access the user's wallet
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+    if (accounts.length !== 0) {
+      const account = accounts[0];
+      console.log("Found an authorized account", account);
+      setCurrentAccount(account);
+    } else {
+      console.log("No authorized account found");
+    }
+  };
+
+  /*
+   * Implement your connectWallet method here
+   */
+  const connectWallet = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (!ethereum) {
+        alert("Get MetaMask!");
+        return;
+      }
+
+      /*
+       * Fancy method to request access to account.
+       */
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      /*
+       * Boom! This should print out public address once we authorize Metamask.
+       */
+      console.log("Connected", accounts[0]);
+      setCurrentAccount(accounts[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // Render Methods
   const renderNotConnectedContainer = () => (
-    <button className="cta-button connect-wallet-button">
+    <button
+      onClick={connectWallet}
+      className="cta-button connect-wallet-button"
+    >
       Connect to Wallet
     </button>
   );
+  useEffect(() => {
+    checkIfWallectIsConnected();
+  }, []);
 
   return (
     <div className="App">
