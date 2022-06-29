@@ -88,6 +88,9 @@
   font-size: 16px;
   font-weight: bold;
 }
+.mt {
+  margin-right: 5px;
+}
 
 /* KeyFrames */
 @-webkit-keyframes gradient-animation {
